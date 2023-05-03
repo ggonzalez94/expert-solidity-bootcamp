@@ -1,3 +1,5 @@
+# Homework 1
+
 1. Look at the example in this [gist](https://gist.github.com/extropyCoder/4243c0f90e6a6e97006a31f5b9265b94) When we do the CODECOPY operation, what are we overwriting?
    When deploying a smart contract, a transaction with the address set to null is sent to the network with the following data:
    `<init code> <runtime code> <constructor parameters>`
@@ -64,27 +66,27 @@ Getting the next memory location available from the first memory pointer and upd
     }
     ```
 
-```solidity
-pragma solidity ^0.8.4;
+    ```solidity
+    pragma solidity ^0.8.4;
 
-contract Add {
-    function addAssembly(uint256 x, uint256 y) public pure returns (uint256) {
-        // Intermediate variables can't communicate between  assembly blocks
-        // But they can be written to memory in one block
-        // and retrieved in another.
-        // Fix this code using memory to store the result between the blocks
-        // and return the result from the second block
-        assembly {
-            let result := add(x, y)
-            //not necesary here since we don't have anything else in memory(we could directly use 0x80), but still good practice
-            let memPtr := mload(0x40)
-            mstore(memPtr, result)
-        }
+    contract Add {
+        function addAssembly(uint256 x, uint256 y) public pure returns (uint256) {
+            // Intermediate variables can't communicate between  assembly blocks
+            // But they can be written to memory in one block
+            // and retrieved in another.
+            // Fix this code using memory to store the result between the blocks
+            // and return the result from the second block
+            assembly {
+                let result := add(x, y)
+                //not necesary here since we don't have anything else in memory(we could directly use 0x80), but still good practice
+                let memPtr := mload(0x40)
+                mstore(memPtr, result)
+            }
 
-        assembly {
-            let memPtr := mload(0x40)
-            return(memPtr, 32) //32 bytes offset
+            assembly {
+                let memPtr := mload(0x40)
+                return(memPtr, 32) //32 bytes offset
+            }
         }
     }
-}
-```
+    ```
