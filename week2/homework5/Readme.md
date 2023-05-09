@@ -37,7 +37,8 @@ Getting the next memory location available from the first memory pointer and upd
 ```
 
 5. Can you think of a situation where the opcode EXTCODECOPY is used?
-   It can be used to compare or verify a contract's bytecode. More details [here](https://ethereum.stackexchange.com/questions/59779/what-is-the-purpose-of-extcodecopy#:~:text=It%20is%20used%20to%20check,file%20to%20confirm%20its%20legitimacy.)
+
+    It can be used to compare or verify a contract's bytecode. More details [here](https://ethereum.stackexchange.com/questions/59779/what-is-the-purpose-of-extcodecopy#:~:text=It%20is%20used%20to%20check,file%20to%20confirm%20its%20legitimacy.)
 
 6. Complete the assembly exercises in this [repo](https://github.com/ExtropyIO/ExpertSolidityBootcamp/tree/main/exercises/assembly)
 
@@ -86,6 +87,49 @@ Getting the next memory location available from the first memory pointer and upd
             assembly {
                 let memPtr := mload(0x40)
                 return(memPtr, 32) //32 bytes offset
+            }
+        }
+    }
+    ```
+
+    ```solidity
+    pragma solidity ^0.8.4;
+
+    contract SubOverflow {
+        // Modify this function so that on underflow it returns the value 0
+        // otherwise it should return x - y
+        function subtract(uint256 x, uint256 y) public pure returns (uint256) {
+            // Write assembly code that handles overflows
+            assembly {
+                switch lt(x, y)
+                case 0 { //x > y
+                    // No underflow, perform the subtraction
+                    let result := sub(x, y)
+                    mstore(0x80, result) // Store the result in memory
+                    return(0x80, 0x20) // Return the result
+                }
+                case 1 { //x < y
+                    // Underflow, return 0
+                    mstore(0x00, 0x00) // Store 0 in memory
+                    return(0x00, 0x20) // Return 0
+                }
+            }
+        }
+    }
+    ```
+
+    ```solidity
+    pragma solidity ^0.8.4;
+
+    contract Scope {
+        uint256 public count = 10;
+
+        function increment(uint256 num) public {
+            // Modify state of the count variable from within
+            // the assembly segment
+            assembly {
+                let result := add(num, sload(count.slot))
+                sstore(count.slot, result)
             }
         }
     }
