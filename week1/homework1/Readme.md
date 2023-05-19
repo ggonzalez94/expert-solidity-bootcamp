@@ -13,4 +13,4 @@
     - Nonce: Is a sequencial identifier part of every transaction. The network will reject a transaction with a nonce it has seen before. This prevents agains replay attacks in the same network.
     - ChainId: The nonce is not enough when a chain has a hard fork, as transactions from one chain could be copied to another and they will be valid. That's why EIP-155 introduced chainId as part of transactions for EVM networks.
 4. In a contract, how do we know who called a view function?
-   You cannot determine who called a view function, since they don't involve transaction execution and are not committed on-chain. Calls to view functions are served directly by the node you are connected to.
+   You cannot determine who called a view function, since they don't involve transaction execution and are not committed on-chain. Calls to view functions are served directly by the node you are connected to
